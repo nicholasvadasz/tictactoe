@@ -11,6 +11,7 @@ function App() {
   const [dimension, setDimension] = useState(3);
   const [curPlayer, setCurPlayer] = useState<SquareValue>("X");
   const [gameOver, setGameOver] = useState(false);
+  const [gameOverText, setGameOverText] = useState("");
   const [arrayOfWinningSquares, setArrayOfWinningSquares] = useState<number[]>(
     []
   );
@@ -34,26 +35,39 @@ function App() {
         return square;
       })
     );
+    checkForWinOrDraw(newBoard);
+    setBoard(newBoard);
+    setCurPlayer(curPlayer === "X" ? "O" : "X");
+  };
 
+  const checkForWinOrDraw = (newBoard: SquareValue[][]) => {
     const rowWin = checkRowWin(dimension, newBoard, curPlayer);
     const colWin = checkColWin(dimension, newBoard, curPlayer);
     const diagonalWin = checkDiagonalWin(dimension, newBoard, curPlayer);
     if (rowWin.length || colWin.length || diagonalWin.length) {
       setGameOver(true);
+      setGameOverText("PLAYER " + (curPlayer === "X" ? "1" : "2") + " WINS!");
       setScore({
         X: score.X + (curPlayer === "X" ? 1 : 0),
         O: score.O + (curPlayer === "O" ? 1 : 0),
       });
       setArrayOfWinningSquares(rowWin.concat(colWin).concat(diagonalWin));
+    } else {
+      if (
+        newBoard.every((row) => row.every((square) => square !== null)) &&
+        !gameOver
+      ) {
+        setGameOver(true);
+        setGameOverText("DRAW!");
+      }
     }
-    setBoard(newBoard);
-    setCurPlayer(curPlayer === "X" ? "O" : "X");
   };
 
   const resetAll = (newDim: number) => {
     setBoard(Array(newDim).fill(Array(newDim).fill(null)));
     setCurPlayer("X");
     setGameOver(false);
+    setGameOverText("");
     setArrayOfWinningSquares([]);
   };
 
@@ -83,7 +97,7 @@ function App() {
       <div className="board">
         <p className="headerText">
           {gameOver
-            ? "GAME OVER!"
+            ? gameOverText
             : "PLAYER " + (curPlayer === "X" ? "1" : "2") + "'S TURN"}
         </p>
         {board.map((row, i) => (
