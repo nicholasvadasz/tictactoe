@@ -1,0 +1,18 @@
+.Square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid black;
+  border-radius: 10px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  cursor: pointer;
+}
+
+.X {
+  color: rgb(145, 33, 33);
+}
+
+.O {
+  color: rgb(26, 26, 112);
+}
